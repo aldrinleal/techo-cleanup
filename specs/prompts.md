@@ -32,6 +32,11 @@ jq -rs "[.[] | select(.project == \"$PWD\") | {ts: (.timestamp/1000|strftime(\"%
 
 <!-- Agregar nuevos prompts debajo de esta línea -->
 
+## 2026-04-14 — Cambio de concepto de anonimización (token hash)
+> ahora cambia el concepto de anonimizacion: no hay que excluir el campo. sino implementar este algoritmo:
+> hacer un split en tokens. para cada token, remplazar por pseudocodigo anon_token(s): s.lower().sinacentos + sha1[:8]
+> planear, evaluar y hacer una spec antes de implementar.
+
 ---
 
 ## Sesiones Claude Code — 2026-04-14
