@@ -10,7 +10,32 @@
 
 TECHO es una organización sin fines de lucro que trabaja con comunidades en asentamientos informales. Los voluntarios realizan **caracterizaciones** (entrevistas a familias) para documentar las condiciones habitacionales, socioeconómicas y de acceso a servicios de cada hogar.
 
-Los datos se recolectan en campo y se consolidan en planillas ODS (LibreOffice Calc). Este proyecto busca transformar esas planillas en una base de datos limpia, estructurada y utilizable para toma de decisiones y aplicaciones móviles de campo.
+Los datos se recolectan en campo (via Kobotoolbox) y se consolidan en Google Sheets / planillas ODS (LibreOffice Calc). Este proyecto busca transformar esas planillas en una base de datos limpia, estructurada y utilizable para toma de decisiones y aplicaciones móviles de campo.
+
+### Problemas Actuales del Sistema (Google Sheets)
+
+Documentados en reunión de seguimiento del 23/03/2026 (`specs/Techo - Seguimiento 09_03_2026.xlsx`):
+
+| Problema | Probabilidad | Impacto | Prioridad |
+|---|---|---|---|
+| Estructura no relacional, difícil de mantener | Alta | Alto | **Alto** |
+| Duplicados en bases de familias/comunidad | Alta | Medio | **Alto** |
+| Límite de rendimiento y lentitud | Media | Medio | Medio |
+| Falta de consistencia de datos en campo | Alta | Alto | **Alto** |
+| Riesgos de privacidad / acceso no autorizado | Media | Alto | Medio |
+| Sin sistema de priorización de asignaciones | Media | Alto | Medio |
+| Dependencia total de Google Sheets / APIs de Google | Baja | Alto | ? |
+
+### RFPs Relacionadas (del mismo seguimiento)
+
+- **App móvil offline** (Santiago Cubides): React Native/Expo para toma de datos técnicos en campo con coordenadas, fotos y matriz multicriterio de criticidad.
+- **Script deduplicación** (Daniel González): Google Apps Script para sincronizar y validar por cédula entre hojas.
+- **Migración a DB relacional** (Aldrin Leal): PostgreSQL, Firebase o Supabase para superar limitaciones de Sheets.
+- **Revisión legal de privacidad** (Aldrin Leal): Aclarar qué se puede hacer con los datos de familias.
+- **Alianza Microsoft** (Valentina Posada): Explorar donación de servicios cloud Azure.
+- **Integración Kobotoolbox → Sheets** (Valentina Posada): Automatización de descarga de datos.
+
+> **Nota legal importante**: Existe preocupación activa sobre privacidad y uso de datos de las familias. La anonimización no es opcional — es un requisito legal y ético.
 
 ---
 
