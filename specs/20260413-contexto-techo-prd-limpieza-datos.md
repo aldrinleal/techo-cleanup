@@ -44,31 +44,32 @@ Documentados en reunión de seguimiento del 23/03/2026 (`specs/Techo - Seguimien
 ### Flujo de Datos (confirmado en chat del equipo, 2026-04-13)
 
 ```
-Campo (familias)
-    │
-    ├─► Google Forms (encuesta inicial)
-    │        │
-    │        └─► Google Sheet 1 — Caracterizaciones
-    │                  │
-    │                  └─► Exportación ODS ──► in/sheet.ods (pestaña "Caracterizaciones")
-    │
-    └─► Entrevistas de seguimiento por comunidad (datos de campo, manuales)
-             │
-             └─► Google Sheet 2 — Seguimiento / Entrevistas por comunidad
-                       │
-                       └─► Exportación ODS ──► in/sheet.ods (pestañas por comunidad)
+1. Google Forms (encuesta básica inicial)
+        │
+        └─► Google Sheet 1 — Caracterizaciones
+                  │  (info básica de cada familia)
+                  └──────────────────────────────────────╮
+                                                          ▼
+2. Voluntarios van al barrio con Kobo         in/sheet.ods ──► Pipeline
+   (encuesta de campo completa)                    ▲
+        │                                          │
+        └─► Google Sheet 2 — por comunidad ────────╯
+                  │  (info adicional + selección)
+3. Kobo data selecciona familias
+4. Se actualiza Sheet 2 con familias asignadas
 ```
 
 Hay **2 Google Sheets** distintos en uso:
-1. **Sheet de Caracterizaciones** — recibe respuestas del Google Form inicial (encuesta a familias). Se exporta como la pestaña "Caracterizaciones" del ODS.
-2. **Sheet de Entrevistas/Seguimiento** — datos de seguimiento recolectados manualmente en campo, organizados por comunidad. Se exporta como las 3 pestañas de comunidad del ODS.
+1. **Sheet de Caracterizaciones** — recibe respuestas del Google Form inicial (encuesta básica). Se exporta como la pestaña "Caracterizaciones" del ODS.
+2. **Sheet por comunidad** — alimentado por Kobo (encuesta de campo) + actualizaciones de asignación. Se exporta como las 3 pestañas de comunidad del ODS.
 
-> **Corrección al modelo anterior**: La pestaña "Caracterizaciones" NO viene de Kobotoolbox — viene de un Google Form. Las 3 pestañas de comunidad son entrevistas de seguimiento posteriores a la encuesta inicial, no datos de Kobotoolbox.
+Proceso completo (según Daniel González, 2026-04-13):
+1. Google Form recoge info básica de cada familia → Sheet 1 (Caracterizaciones).
+2. Con las familias identificadas, voluntarios van al barrio y hacen la **encuesta Kobo** → completa info adicional en Sheet 2 (comunidad).
+3. Los datos de Kobo se usan para **seleccionar familias** para asignación.
+4. Se actualiza Sheet 2 con las familias que fueron asignadas.
 
-El proceso de consolidación (identificado por Aldrin en el grupo, 2026-04-13):
-1. Determinar cuáles son las hojas (hoja de caracterización y hoja de entrevista de campo).
-2. Identificar la entrada de datos por hoja (Google Forms para caracterizaciones, manual para seguimientos).
-3. Unificar y limpiar en la base maestra.
+> Pasos manuales candidatos a automatización: la transferencia Kobo → Sheet 2, y la actualización de asignaciones.
 
 ### Prioridades del Equipo (votación en grupo, 2026-04-13)
 
@@ -89,9 +90,9 @@ El proceso de consolidación (identificado por Aldrin en el grupo, 2026-04-13):
 | Pestaña | Contenido | Tipo | Fuente |
 |---|---|---|---|
 | Caracterizaciones | Encuesta inicial a familias | Datos maestros | Google Form → Google Sheet 1 |
-| Vereda El Granizal | Entrevistas de seguimiento — El Granizal | Follow-up | Google Sheet 2 (manual) |
-| Manrique La Honda | Entrevistas de seguimiento — La Honda | Follow-up | Google Sheet 2 (manual) |
-| Vereda La Nueva Jerusalen | Entrevistas de seguimiento — Nueva Jerusalen | Follow-up | Google Sheet 2 (manual) |
+| Vereda El Granizal | Encuesta Kobo + asignaciones — El Granizal | Follow-up / Kobo | Google Sheet 2 |
+| Manrique La Honda | Encuesta Kobo + asignaciones — La Honda | Follow-up / Kobo | Google Sheet 2 |
+| Vereda La Nueva Jerusalen | Encuesta Kobo + asignaciones — Nueva Jerusalen | Follow-up / Kobo | Google Sheet 2 |
 
 ---
 
@@ -145,6 +146,8 @@ Un pipeline reproducible y automatizable que transforma planillas ODS con datos 
 - [ ] Todas las columnas del ODS se preservan (sin pérdida de datos en esta fase)
 - [ ] El script es idempotente (re-ejecutar produce el mismo resultado)
 - [ ] Log de ejecución indica cuántas filas se importaron por pestaña
+- [ ] El campo identificador común entre `caracterizaciones` y `comunidades` se detecta y se reporta en el log (aunque no se valida aún — eso es Fase 2). Si no existe un campo común obvio, el log lo advierte explícitamente.
+- [ ] Las filas de `comunidades` sin match en `caracterizaciones` (familias en Kobo sin encuesta inicial) se cuentan y reportan en el log.
 
 **Qué NO debe cambiar**:
 - Los datos originales del ODS (solo lectura)

@@ -6,14 +6,16 @@ Preguntas que bloquean o podrían afectar decisiones de diseño. Resolver antes 
 
 ## D-01 — Rol de Kobotoolbox en el flujo actual
 
-**Estado**: Abierta
-**Bloquea**: Fase 1 (ingesta), modelo de datos final
+**Estado**: ✅ Resuelta (Daniel González, 2026-04-13)
+**Bloquea**: ~~Fase 1~~
 
-El equipo menciona Kobotoolbox en la discusión, pero la pestaña "Caracterizaciones" viene de un Google Form y las 3 pestañas de comunidad son seguimientos manuales.
+Kobo SÍ está activo en el flujo actual. Es la herramienta de campo que se usa **después** del Google Form inicial:
+1. Google Form → info básica → Sheet 1 (Caracterizaciones)
+2. Voluntarios van al barrio → encuesta **Kobo** → info adicional → Sheet 2 (comunidad)
+3. Kobo data determina qué familias se seleccionan para asignación
+4. Sheet 2 se actualiza con las familias asignadas
 
-- ¿Se usa Kobotoolbox actualmente en algún paso del flujo?
-- ¿Es una herramienta futura (target de migración) o ya está en producción?
-- Si está activo, ¿a qué Google Sheet alimenta y qué columnas produce?
+Pendiente aún (ver D-02): qué columnas específicas produce Kobo en Sheet 2.
 
 ---
 
@@ -29,15 +31,17 @@ La pestaña "Caracterizaciones" es una exportación del Google Form de encuesta 
 
 ---
 
-## D-03 — Diferencia de columnas entre las 3 pestañas de comunidad
+## D-03 — Identificador común entre pestañas (clave de JOIN)
 
-**Estado**: Abierta
-**Bloquea**: Fase 1 (ingesta), Fase 2 (modelado de `ENTREVISTA_SEGUIMIENTO`)
+**Estado**: Abierta — CRÍTICA
+**Bloquea**: Fase 1 (ingesta), Fase 2 (modelado), Fase 3 (deduplicación)
 
-Las pestañas Vereda El Granizal, Manrique La Honda y Vereda La Nueva Jerusalen son entrevistas de seguimiento, pero probablemente tienen columnas distintas entre sí o distintas a "Caracterizaciones".
+El proceso real tiene 2 hojas que deben conectarse (Sheet 1 de Google Form + Sheet 2 de Kobo). Sin un identificador común, `caracterizaciones` y `comunidades` son tablas desconectadas y el pipeline pierde su valor.
 
-- ¿Las 3 pestañas tienen el mismo esquema o cada comunidad tiene su propio formato?
-- ¿Hay columnas en común con "Caracterizaciones" que permitan hacer JOIN por familia?
-- ¿Cuál es el campo que identifica a una familia de forma única (¿cédula?, ¿nombre + dirección?)
+- ¿Cuál es el campo que identifica a una familia de forma única en ambas hojas? (¿cédula?, ¿nombre completo?, ¿un ID generado por el Form?)
+- ¿Las 3 pestañas de comunidad tienen el mismo esquema entre sí, o cada comunidad tiene su propio formato de columnas?
+- ¿Hay familias en las pestañas de comunidad (Kobo) que NO están en Caracterizaciones? (familias que hicieron la encuesta de campo sin haber llenado el Form inicial)
+
+> La Fase 1 reportará cuántas filas de comunidades no tienen match en caracterizaciones, lo que ayudará a responder la última pregunta empíricamente.
 
 ---
