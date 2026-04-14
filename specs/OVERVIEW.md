@@ -4,7 +4,21 @@
 
 **Techo Cleanup** es un pipeline de datos que transforma planillas ODS con entrevistas de campo (caracterizaciones de familias en asentamientos informales) en bases de datos relacionales limpias, normalizadas y auditables.
 
+Los datos provienen de **dos Google Sheets** distintos:
+1. **Google Sheet 1** — alimentado por un Google Form de encuesta inicial a familias → pestaña "Caracterizaciones"
+2. **Google Sheet 2** — entrevistas de seguimiento por comunidad, ingreso manual → 3 pestañas de comunidad
+
+Ambos se exportan en un único ODS que sirve de entrada al pipeline.
+
 Produce dos artefactos principales: una base de datos interna completa para coordinadores, y una versión anonimizada sin datos personales (PII) expuesta mediante una API REST para consumo desde aplicaciones móviles de campo.
+
+### Flujo de Origen
+
+```
+Google Form ──► Google Sheet 1 (Caracterizaciones) ──────────────────╮
+                                                                       ► in/sheet.ods ──► Pipeline
+Seguimiento manual ──► Google Sheet 2 (3 comunidades) ───────────────╯
+```
 
 ## Funciones Principales
 
@@ -141,6 +155,7 @@ erDiagram
     CARACTERIZACION {
         integer id PK
         integer familia_id FK
+        text fuente
         text material_paredes
         text material_piso
         text material_techo
@@ -152,6 +167,18 @@ erDiagram
         boolean hacinamiento
         float score_prioridad
         text observaciones
+        timestamp registrado_en
+    }
+
+    ENTREVISTA_SEGUIMIENTO {
+        integer id PK
+        integer familia_id FK
+        integer comunidad_id FK
+        date fecha_visita
+        text encuestador
+        text observaciones_campo
+        text situacion_actual
+        boolean requiere_intervencion
         timestamp registrado_en
     }
 
@@ -182,7 +209,8 @@ erDiagram
     }
 
     COMUNIDAD ||--o{ FAMILIA : "tiene"
-    FAMILIA ||--o| CARACTERIZACION : "tiene"
+    FAMILIA ||--o| CARACTERIZACION : "tiene (encuesta inicial)"
+    FAMILIA ||--o{ ENTREVISTA_SEGUIMIENTO : "tiene (seguimientos)"
     FAMILIA ||--o{ PATCH_LOG : "auditada en"
     FAMILIA }o--o| FAMILIA : "duplicado_de"
     COMUNIDAD ||--o{ FAMILIA_ANONIMIZADA : "tiene"
@@ -190,13 +218,14 @@ erDiagram
 
 ### Descripción de Entidades
 
-| Entidad | Descripción | Base de datos |
-|---|---|---|
-| `COMUNIDAD` | Las 3 comunidades del proyecto (Granizal, La Honda, Nueva Jerusalen) | `caracterizaciones_limpio.db` |
-| `FAMILIA` | Registro de cada hogar entrevistado con datos completos incluyendo PII | `caracterizaciones_limpio.db` |
-| `CARACTERIZACION` | Respuestas de la entrevista: condiciones de vivienda, servicios, hacinamiento | `caracterizaciones_limpio.db` |
-| `PATCH_LOG` | Historial de cambios vía API — cada PATCH genera un JSON Patch (RFC 6902) | `caracterizaciones_limpio.db` |
-| `FAMILIA_ANONIMIZADA` | Versión sin PII de `FAMILIA` + `CARACTERIZACION` para app móvil, con UUID como ID | `comunidad_anonimizada.db` |
+| Entidad | Descripción | Fuente ODS | Base de datos |
+|---|---|---|---|
+| `COMUNIDAD` | Las 3 comunidades del proyecto (Granizal, La Honda, Nueva Jerusalen) | — | `caracterizaciones_limpio.db` |
+| `FAMILIA` | Registro de cada hogar con datos completos incluyendo PII | Ambas pestañas | `caracterizaciones_limpio.db` |
+| `CARACTERIZACION` | Encuesta inicial vía Google Form: condiciones de vivienda, servicios, hacinamiento | Pestaña "Caracterizaciones" (Sheet 1) | `caracterizaciones_limpio.db` |
+| `ENTREVISTA_SEGUIMIENTO` | Visitas de seguimiento por comunidad, post-encuesta inicial | Pestañas por comunidad (Sheet 2) | `caracterizaciones_limpio.db` |
+| `PATCH_LOG` | Historial de cambios vía API — cada PATCH genera un JSON Patch (RFC 6902) | — | `caracterizaciones_limpio.db` |
+| `FAMILIA_ANONIMIZADA` | Versión sin PII de `FAMILIA` + `CARACTERIZACION` para app móvil, con UUID | — | `comunidad_anonimizada.db` |
 
 ### Campos PII (requieren anonimización)
 

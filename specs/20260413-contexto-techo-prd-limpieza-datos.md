@@ -41,16 +41,57 @@ Documentados en reunión de seguimiento del 23/03/2026 (`specs/Techo - Seguimien
 
 ## 2. Fuente de Datos
 
+### Flujo de Datos (confirmado en chat del equipo, 2026-04-13)
+
+```
+Campo (familias)
+    │
+    ├─► Google Forms (encuesta inicial)
+    │        │
+    │        └─► Google Sheet 1 — Caracterizaciones
+    │                  │
+    │                  └─► Exportación ODS ──► in/sheet.ods (pestaña "Caracterizaciones")
+    │
+    └─► Entrevistas de seguimiento por comunidad (datos de campo, manuales)
+             │
+             └─► Google Sheet 2 — Seguimiento / Entrevistas por comunidad
+                       │
+                       └─► Exportación ODS ──► in/sheet.ods (pestañas por comunidad)
+```
+
+Hay **2 Google Sheets** distintos en uso:
+1. **Sheet de Caracterizaciones** — recibe respuestas del Google Form inicial (encuesta a familias). Se exporta como la pestaña "Caracterizaciones" del ODS.
+2. **Sheet de Entrevistas/Seguimiento** — datos de seguimiento recolectados manualmente en campo, organizados por comunidad. Se exporta como las 3 pestañas de comunidad del ODS.
+
+> **Corrección al modelo anterior**: La pestaña "Caracterizaciones" NO viene de Kobotoolbox — viene de un Google Form. Las 3 pestañas de comunidad son entrevistas de seguimiento posteriores a la encuesta inicial, no datos de Kobotoolbox.
+
+El proceso de consolidación (identificado por Aldrin en el grupo, 2026-04-13):
+1. Determinar cuáles son las hojas (hoja de caracterización y hoja de entrevista de campo).
+2. Identificar la entrada de datos por hoja (Google Forms para caracterizaciones, manual para seguimientos).
+3. Unificar y limpiar en la base maestra.
+
+### Prioridades del Equipo (votación en grupo, 2026-04-13)
+
+| Opción | Resultado |
+|---|---|
+| **Limpieza, unificación, estandarización y actualización BD** | ✅ Prioridad #1 (más votos) |
+| App Móvil para asignaciones, búsqueda y dejar tramitar | Prioridad #2 |
+| Módulo para asignar % priorización de acuerdo a variables clave | Prioridad #3 |
+
+> Este proyecto implementa directamente la opción #1. El objetivo operativo es tener la base limpia y exportable a fin de mes.
+
+### Archivo Local
+
 **Archivo principal**: `in/sheet.ods`
 
 ### Pestañas relevantes
 
-| Pestaña | Contenido |
-|---|---|
-| Caracterizaciones | Entrevistas individuales a familias (datos maestros) |
-| Vereda El Granizal | Datos específicos de la comunidad El Granizal |
-| Manrique La Honda | Datos específicos de la comunidad Manrique La Honda |
-| Vereda La Nueva Jerusalen | Datos específicos de la comunidad Vereda La Nueva Jerusalen |
+| Pestaña | Contenido | Tipo | Fuente |
+|---|---|---|---|
+| Caracterizaciones | Encuesta inicial a familias | Datos maestros | Google Form → Google Sheet 1 |
+| Vereda El Granizal | Entrevistas de seguimiento — El Granizal | Follow-up | Google Sheet 2 (manual) |
+| Manrique La Honda | Entrevistas de seguimiento — La Honda | Follow-up | Google Sheet 2 (manual) |
+| Vereda La Nueva Jerusalen | Entrevistas de seguimiento — Nueva Jerusalen | Follow-up | Google Sheet 2 (manual) |
 
 ---
 
