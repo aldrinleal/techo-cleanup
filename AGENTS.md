@@ -29,7 +29,7 @@ techo-cleanup/
 3. **Secrets**: Nunca commitear `.env`. Mantener `.env.sample` actualizado con claves vacías o placeholders.
 4. **in/ y out/**: No commitear archivos en estas carpetas (contienen datos reales de beneficiarios).
 5. **Anonimización**: Los datos personales nunca deben aparecer en código, logs ni commits.
-6. **Antes de commitear**: Actualizar el historial de prompts ejecutando `./bin/claude-prompts-history`.
+6. **Antes de commitear**: Ejecutar `./bin/claude-prompts-history` para ver los prompts de la sesión, y actualizar `specs/prompts.md` con las entradas relevantes.
 
 ## Stack Técnico
 
