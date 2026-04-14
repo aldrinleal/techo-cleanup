@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Append new Claude Code session prompts for this project to specs/prompts.md
+# Usage: ./bin/claude-prompts-history
+
+set -euo pipefail
+
+HISTORY="$HOME/.claude/history.jsonl"
+PROMPTS="specs/prompts.md"
+PROJECT="$(pwd)"
+
+if [[ ! -f "$HISTORY" ]]; then
+  echo "No se encontró $HISTORY" >&2
+  exit 1
+fi
+
+# Extract prompts for this project, skip slash-commands and navigation entries
+NEW_ENTRIES=$(jq -rs "
+  [.[] | select(
+    .project == \"$PROJECT\"
+    and (.display | test(\"^/exit|^/quit|^/remote-|^/clear\") | not)
+    and (.display != \"yes\" and .display != \"no\")
+  ) | \"## \" + (.timestamp/1000 | strftime(\"%Y-%m-%d %H:%M\")) + \"\\n> \" + .display]
+  | .[]
+" "$HISTORY")
+
+if [[ -z "$NEW_ENTRIES" ]]; then
+  echo "No hay nuevos prompts para agregar."
+  exit 0
+fi
+
+# Append under the session section marker
+echo "" >> "$PROMPTS"
+echo "---" >> "$PROMPTS"
+echo "" >> "$PROMPTS"
+echo "## Sesión — $(date +%Y-%m-%d)" >> "$PROMPTS"
+echo "" >> "$PROMPTS"
+echo "$NEW_ENTRIES" >> "$PROMPTS"
+
+echo "✓ Prompts agregados a $PROMPTS"
