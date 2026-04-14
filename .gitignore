@@ -4,6 +4,11 @@ out/*
 !in/.gitkeep
 !out/.gitkeep
 
+# Planillas con datos reales (no commitear)
+*.ods
+*.xlsx
+*.xls
+
 # Secrets
 .env
 
