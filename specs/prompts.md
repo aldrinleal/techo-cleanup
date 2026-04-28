@@ -32,6 +32,9 @@ jq -rs "[.[] | select(.project == \"$PWD\") | {ts: (.timestamp/1000|strftime(\"%
 
 <!-- Agregar nuevos prompts debajo de esta línea -->
 
+## 2026-04-27 — Spec de deduplicación con LLM opcional
+> analise - y crea - una spec para lidiar com la fase 2, la de duplicados. considera el uso opcionalmente de un LLM para ayudar a pillarlos
+
 ## 2026-04-14 — Cambio de concepto de anonimización (token hash)
 > ahora cambia el concepto de anonimizacion: no hay que excluir el campo. sino implementar este algoritmo:
 > hacer un split en tokens. para cada token, remplazar por pseudocodigo anon_token(s): s.lower().sinacentos + sha1[:8]
