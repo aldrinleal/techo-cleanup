@@ -60,16 +60,16 @@ cp /ruta/a/sheet.ods in/sheet.ods
 
 ```bash
 # Fase 1: Ingesta ODS → SQLite
-pipenv run nbclick run notebooks/01_ingesta.ipynb
+pipenv run nbclick notebooks/01_ingesta.ipynb
 
 # Fase 2: Análisis exploratorio
 pipenv run jupyter notebook notebooks/02_analisis_exploratorio.ipynb
 
 # Fase 3: Limpieza y deduplicación
-pipenv run nbclick run notebooks/03_limpieza.ipynb
+pipenv run nbclick notebooks/03_limpieza.ipynb
 
 # Fase 4: Exportación anonimizada
-pipenv run nbclick run notebooks/04_anonimizacion.ipynb
+pipenv run nbclick notebooks/04_anonimizacion.ipynb
 
 # Fase 5: Levantar API
 pipenv run uvicorn src.api.main:app --reload
